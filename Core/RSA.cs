@@ -7,7 +7,7 @@ public class RSA : ICipher // TODO: IDisposable
 {
     // private
     private BigInteger _decryptionExp;
-    private BigInteger _p, _q; // p,q - big enough prime numbers (todo: randomly generate)
+    private BigInteger _p, _q; 
 
 
     // public
@@ -20,21 +20,21 @@ public class RSA : ICipher // TODO: IDisposable
     // Logarithm has this nice property that log(X*Y)=log(X)+log(Y),
     // which hints that the number of digits for X*Y is roughly 
     // the sum of the number of digits representing X and Y.
-    public int PrimesSize { get; init; } = 1024; // recommended to use 2048 size of key since 2011
+    public int PrimesSize { get; init; } // recommended to use 2048 size of key since 2011
 
 
     public RSA(Encoding? encoding = null, int bitSize = 1024, bool useDefaultPublicExp = true)
     {
+        // for text encoding
         if (encoding is not null) Encoding = encoding;
 
-        // TODO: generate!
-        //_p = new BigInteger(9393804643);
-        //_q = new BigInteger(5730255211);
-        _p = PrimeNumberGenerator.GetRandomPrimaryNumber(bitSize);
-        _q = PrimeNumberGenerator.GetRandomPrimaryNumber(bitSize);
+        PrimesSize = bitSize;
+        
+        _p = PrimeNumberGenerator.GetRandomPrimaryNumber(PrimesSize);
+        _q = PrimeNumberGenerator.GetRandomPrimaryNumber(PrimesSize);
 
         while (_q == _p)
-            _q = PrimeNumberGenerator.GetRandomPrimaryNumber(bitSize);
+            _q = PrimeNumberGenerator.GetRandomPrimaryNumber(PrimesSize);
 
         Modulus = _p * _q;
 
@@ -46,53 +46,36 @@ public class RSA : ICipher // TODO: IDisposable
             // todo: calculate public exp
         }
 
-        _decryptionExp = CalculateDecryptionExp();
+        _decryptionExp = MyMath.InverseByModulus(EncryptionExp, (_p - 1) * (_q - 1));
     }
-
-    private BigInteger CalculateDecryptionExp()
-        => MyMath.InverseByModulus(EncryptionExp, (_p - 1) * (_q - 1));
-
+    
     public BigInteger Encrypt(int m)
         => BigInteger.ModPow(m, EncryptionExp, Modulus);
 
     public BigInteger Decrypt(BigInteger c)
         => BigInteger.ModPow(c, _decryptionExp, Modulus);
 
-    public string Encrypt(string text)
-    {
-        var encrypted = new List<BigInteger>();
-
-        foreach (var c in text)
-            encrypted.Add(Encrypt(c - '0'));
-
-        var strBuilder = new StringBuilder();
-        foreach (var i in encrypted)
-        {
-            var bytes = i.ToByteArray();
-            strBuilder.Append(Encoding.UTF8.GetChars(bytes));
-            //strBuilder.Append(GetCharByBigInteger(i));
-        }
-
-
-        return strBuilder.ToString();
-    }
-
-
-    // private string GetCharByBigInteger(BigInteger number)
+    // public string Encrypt(string text)
     // {
-    //     var str = number.ToString();
+    //     var encrypted = new List<BigInteger>();
     //
-    //     while (str.Length % 3 != 0)
-    //         str = '0' + str;
+    //     foreach (var c in text)
+    //         encrypted.Add(Encrypt(c - '0'));
     //
-    //     string result = "";
-    //     for (int i = 0; i < str.Length; i += 3)
-    //         result += (char)(Int32.Parse(str.Substring(i, 3)));
-    //     return result;
+    //     var strBuilder = new StringBuilder();
+    //     foreach (var i in encrypted)
+    //     {
+    //         var bytes = i.ToByteArray();
+    //         strBuilder.Append(Encoding.UTF8.GetChars(bytes));
+    //         //strBuilder.Append(GetCharByBigInteger(i));
+    //     }
+    //
+    //
+    //     return strBuilder.ToString();
     // }
-
-    public string Decrypt(string cipherText)
-    {
-        return "";
-    }
+    //
+    // public string Decrypt(string cipherText)
+    // {
+    //     return "";
+    // }
 }
