@@ -18,12 +18,12 @@ public static class PrimeNumberGenerator
 
     public static BigInteger GetRandomPrimaryNumber(int bitSize)
     {
-        var candidates = Generate100RandomOddNumbers(bitSize);
+        var candidates = Generate10RandomOddNumbers(bitSize);
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 10; i++)
         {
             var candidate = candidates[i];
-            if (HasPassedLowLevelPrimaryTest(candidate) && HasPassedMillerRabinTest(candidate, 20))
+            if (HasPassedLowLevelPrimaryTest(candidate) && HasPassedMillerRabinTest(candidate, 10))
                 return candidate;
         }
 
@@ -36,10 +36,10 @@ public static class PrimeNumberGenerator
         return result.IsEven ? result + 1 : result;
     }
     
-    private static BigInteger[] Generate100RandomOddNumbers(int bitSize)
+    private static BigInteger[] Generate10RandomOddNumbers(int bitSize)
     {
-        BigInteger[] array = new BigInteger[100];
-        for (int i = 0; i < 100; i++)
+        BigInteger[] array = new BigInteger[10];
+        for (int i = 0; i < 10; i++)
             array[i] = GetRandomOddNumber(bitSize);
         return array;
     }

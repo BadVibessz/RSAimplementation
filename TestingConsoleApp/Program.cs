@@ -1,23 +1,18 @@
 ﻿using System.Diagnostics;
 using Core;
 
+// benchmark
 var timer = new Stopwatch();
-
+int iterations = 50;
 timer.Start();
-var rsa = new RSA();
-timer.Stop();
 
-Console.WriteLine($"keys generated for: {timer.ElapsedMilliseconds} ms\n");
+Benchmark.BenchKeyGeneration(iterations,512);
+Benchmark.BenchKeyGeneration(iterations,1024);
+Benchmark.BenchKeyGeneration(iterations,2048,"sec");
 
-timer.Restart();
-var input = 19032002;
-var encrypted = rsa.Encrypt(input);
-var decrypted = rsa.Decrypt(encrypted);
-timer.Stop();
+Benchmark.BenchEncryptionDecryption(iterations,512,int.MaxValue);
+Benchmark.BenchEncryptionDecryption(iterations,1024,int.MaxValue);
+Benchmark.BenchEncryptionDecryption(iterations,2048,int.MaxValue);
 
-Console.WriteLine($"input: {input}");
-Console.WriteLine($"encrypted: {encrypted}");
-Console.WriteLine($"decrypted: {decrypted}");
-Console.WriteLine(input == decrypted);
 
-Console.WriteLine($"encryption/decryption took: {timer.ElapsedMilliseconds} ms");
+
