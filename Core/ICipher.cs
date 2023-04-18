@@ -4,6 +4,9 @@ namespace Core;
 
 public interface ICipher
 {
-    public BigInteger Encrypt(int m);
+    public BigInteger Encrypt(BigInteger m);
     public BigInteger Decrypt(BigInteger n);
+
+    public string Encrypt(string plaintext);
+    public string Decrypt(string ciphertext);
 }
