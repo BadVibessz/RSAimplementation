@@ -52,20 +52,6 @@ public class RSA : ICipher
         var hash = DataConverter.StringToInteger(plainText, Encoding);
         var encrypted = Encrypt(hash);
         return Convert.ToBase64String(encrypted.ToByteArray());
-
-        // var goalLength = (Modulus.GetBitLength() + sizeof(Byte) - 1) / sizeof(Byte);
-        //
-        // var hash = DataConverter.StringToInteger(plainText, Encoding);
-        //
-        // var encrypted = Encrypt(hash);
-        // var encryptedText = DataConverter.IntegerToString(encrypted, goalLength, Encoding);
-        // return encryptedText ?? string.Empty;
-
-        // var hash = DataConverter.StringToInteger(plainText, Encoding);
-        //
-        // var encrypted = Encrypt(hash);
-        // var encryptedText = DataConverter.IntegerToString(encrypted, Encoding);
-        // return encryptedText ?? string.Empty;
     }
 
     public string Decrypt(string cipherText)
@@ -73,21 +59,6 @@ public class RSA : ICipher
         var encrypted = new BigInteger(Convert.FromBase64String(cipherText), isUnsigned: true);
         var decrypted = Decrypt(encrypted);
 
-        // todo: calculate length
-        return DataConverter.IntegerToString(decrypted, 25, Encoding.ASCII);
-
-        // var goalLength = (Modulus.GetBitLength() + sizeof(Byte) - 1) / sizeof(Byte);
-        //
-        // var encrypted = DataConverter.StringToInteger(cipherText, Encoding);
-        //
-        // var decrypted = Decrypt(encrypted);
-        // var decryptedText = DataConverter.IntegerToString(decrypted, goalLength, Encoding);
-        // return decryptedText ?? string.Empty;
-
-        // var encrypted = DataConverter.StringToInteger(cipherText, Encoding);
-        //
-        // var decrypted = Decrypt(encrypted);
-        // var decryptedText = DataConverter.IntegerToString(decrypted, Encoding);
-        // return decryptedText ?? string.Empty;
+        return DataConverter.IntegerToString(decrypted, Encoding.ASCII);
     }
 }

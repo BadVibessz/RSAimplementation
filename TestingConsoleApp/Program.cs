@@ -18,49 +18,40 @@ using Core;
 // Benchmark.BenchEncryptionDecryption(iterations,2048,int.MaxValue);
 
 
-//Console.OutputEncoding = Encoding.UTF8;
+int CalculateMaxLength(RSA rsa)
+{
+    string str = "a";
+
+    var encrypted = rsa.Encrypt(str);
+    var decrypted = rsa.Decrypt(encrypted);
+
+    while (str == decrypted)
+    {
+        str += "a";
+
+        encrypted = rsa.Encrypt(str);
+        decrypted = rsa.Decrypt(encrypted);
+    }
+
+    return str.Length;
+}
 
 
+int bitSize = 256;
+var rsa = new RSA(bitSize: bitSize, encoding: Encoding.ASCII);
 
-// var hash = DataConverter.StringToInteger(plainText, Encoding.ASCII);
-// var obratno = DataConverter.IntegerToString(hash, 25, Encoding.ASCII);
-//
-// var encrypted = rsa.Encrypt(hash);
-//
-// var bytes = encrypted.ToByteArray();
-// var encryptedText = Convert.ToBase64String(bytes);
-//
-// //var encryptedText = DataConverter.IntegerToString(encrypted, 256, Encoding.ASCII);
-//
-// Console.WriteLine($"Encrypted: {encryptedText}");
-//
-// //var encryptedHash = DataConverter.StringToInteger(encryptedText, Encoding.ASCII);
-// var encryptedHash = new BigInteger(Convert.FromBase64String(encryptedText), isUnsigned: true);
-// Console.WriteLine(encryptedHash == encrypted); // todo: to know why not equals
-//
-// var decrypted = rsa.Decrypt(encryptedHash);
-// var decryptedText = DataConverter.IntegerToString(decrypted, 5, Encoding.ASCII);
-// Console.WriteLine($"Decrypted: {decryptedText}");
+Console.WriteLine($"Input a string with length from 1 to {bitSize / 8}");
 
-// var rsa = new RSA(bitSize: 256, encoding: Encoding.ASCII);
-//
+while (true)
+{
+    // we cannot encrypt string that is longer than bitSize / 8
+    var plainText = Console.ReadLine();
 
-var rsa = new RSA(bitSize: 256, encoding: Encoding.ASCII);
-var plainText = "Secure me!";
+    var encrypted = rsa.Encrypt(plainText);
+    var decrypted = rsa.Decrypt(encrypted);
 
-var encrypted = rsa.Encrypt(plainText);
-var decrypted = rsa.Decrypt(encrypted);
-
-Console.WriteLine($"Plain text: {plainText}");
-Console.WriteLine($"Encrypted: {encrypted}");
-Console.WriteLine($"Decrypted: {decrypted}");
-
-// var rsa = new RSA(bitSize: 256);
-//
-// var plainText = "Suka!";
-//
-// var encryptedText = rsa.Encrypt(plainText);
-// Console.WriteLine($"Encrypted: {encryptedText}");
-//
-// var decryptedText = rsa.Decrypt(encryptedText);
-// Console.WriteLine($"Decrypted: {decryptedText}");
+    Console.WriteLine($"Plain text: {plainText}");
+    Console.WriteLine($"Encrypted: {encrypted}");
+    Console.WriteLine($"Decrypted: {decrypted}");
+    Console.WriteLine();
+}
