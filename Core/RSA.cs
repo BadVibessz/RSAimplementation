@@ -47,18 +47,17 @@ public class RSA : ICipher
     public BigInteger Decrypt(BigInteger c)
         => BigInteger.ModPow(c, _decryptionExp, Modulus);
 
-    public string Encrypt(string plainText)
-    {
-        var hash = DataConverter.StringToInteger(plainText, Encoding);
-        var encrypted = Encrypt(hash);
-        return Convert.ToBase64String(encrypted.ToByteArray());
-    }
 
-    public string Decrypt(string cipherText)
-    {
-        var encrypted = new BigInteger(Convert.FromBase64String(cipherText), isUnsigned: true);
-        var decrypted = Decrypt(encrypted);
+    public string EncryptToBase64(string plainText)
+        => Convert.ToBase64String(Encrypt(Encoding.GetBytes(plainText)));
 
-        return DataConverter.IntegerToString(decrypted, Encoding.ASCII);
-    }
+    public string DecryptFromBase64(string cipherText)
+        => Encoding.GetString(Convert.FromBase64String(cipherText));
+
+
+    public byte[] Encrypt(byte[] bytes)
+        => Encrypt(new BigInteger(bytes)).ToByteArray();
+
+    public byte[] Decrypt(byte[] bytes)
+        => Decrypt(new BigInteger(bytes)).ToByteArray();
 }

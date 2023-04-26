@@ -18,40 +18,44 @@ using Core;
 // Benchmark.BenchEncryptionDecryption(iterations,2048,int.MaxValue);
 
 
-int CalculateMaxLength(RSA rsa)
-{
-    string str = "a";
-
-    var encrypted = rsa.Encrypt(str);
-    var decrypted = rsa.Decrypt(encrypted);
-
-    while (str == decrypted)
-    {
-        str += "a";
-
-        encrypted = rsa.Encrypt(str);
-        decrypted = rsa.Decrypt(encrypted);
-    }
-
-    return str.Length;
-}
 
 
 int bitSize = 256;
-var rsa = new RSA(bitSize: bitSize, encoding: Encoding.ASCII);
+var encoding  = Encoding.UTF8;
+var rsa = new RSA(bitSize: bitSize, encoding: encoding);
 
 Console.WriteLine($"Input a string with length from 1 to {bitSize / 8}");
 
+var bytes = new byte[32];
+
+for (int i = 0; i < 32; i++)
+    bytes[i] = 1;
+
+var encryptedBytes = rsa.Encrypt(bytes);
+var decryptedBytes = rsa.Decrypt(encryptedBytes);
+
+
 while (true)
 {
+    // // we cannot encrypt string that is longer than bitSize / 8
+    // var plainText = Console.ReadLine();
+    //
+    // var encrypted = rsa.EncryptToBase64(plainText ?? "");
+    // var decrypted = rsa.DecryptFromBase64(encrypted);
+    //
+    // Console.WriteLine($"Plain text: {plainText}");
+    // Console.WriteLine($"Encrypted: {encrypted}");
+    // Console.WriteLine($"Decrypted: {decrypted}");
+    // Console.WriteLine();
+    
     // we cannot encrypt string that is longer than bitSize / 8
     var plainText = Console.ReadLine();
 
-    var encrypted = rsa.Encrypt(plainText);
-    var decrypted = rsa.Decrypt(encrypted);
-
-    Console.WriteLine($"Plain text: {plainText}");
-    Console.WriteLine($"Encrypted: {encrypted}");
-    Console.WriteLine($"Decrypted: {decrypted}");
-    Console.WriteLine();
+     var encrypted = rsa.Encrypt(encoding.GetBytes(plainText ?? ""));
+     var decrypted = rsa.Decrypt(encrypted);
+     
+     Console.WriteLine($"Plain text: {plainText}");
+     Console.WriteLine($"Encrypted: {encoding.GetString(encrypted)}");
+     Console.WriteLine($"Decrypted: {encoding.GetString(decrypted)}");
+     Console.WriteLine();
 }

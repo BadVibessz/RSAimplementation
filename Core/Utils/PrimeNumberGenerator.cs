@@ -59,7 +59,7 @@ public static class PrimeNumberGenerator
     }
 
     // source: https://stackoverflow.com/questions/33895713/millerrabin-primality-test-in-c-sharp
-    private static bool HasPassedMillerRabinTest(BigInteger candidate, int k) // todo: understand
+    private static bool HasPassedMillerRabinTest(BigInteger candidate, int k)
     {
         var generateRandom = () =>
             new ThreadLocal<Random>(
